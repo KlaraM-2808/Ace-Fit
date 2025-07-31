@@ -1,0 +1,39 @@
+body, html {
+    height: 100%;
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+  }
+  
+  /* Title card style */
+  .title-card {
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 20px 30px;
+    border-radius: 20px;
+    max-width: 600px;
+  }
+  
+  /* Card enhancements */
+  .card {
+    border: none;
+    border-radius: 20px;
+    background-color: rgba(30, 30, 30, 0.85);
+  }
+  
+  /* Profile box */
+  .profile-box {
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+  }
+  
+  /* Typography */
+  h1, h2, h5 {
+    font-weight: 600;
+  }
+  
+  ul li {
+    margin-bottom: 6px;
+  }
+  
+  
+
+

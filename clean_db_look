@@ -1,0 +1,86 @@
+#!/usr/bin/env python3
+import sqlite3
+import sys
+import os
+
+def print_table(rows, max_rows=5):
+    """
+    Pretty‑print up to `max_rows` of sqlite3.Row objects as a table.
+    """
+    if not rows:
+        print("  (no rows)\n")
+        return
+
+    # Extract headers and prepare data rows
+    headers = list(rows[0].keys())
+    data_rows = [[str(row[h]) for h in headers] for row in rows[:max_rows]]
+
+    # Build a matrix including header for width calculation
+    matrix = [headers] + data_rows
+
+    # Compute column widths
+    col_widths = [max(len(cell) for cell in column) for column in zip(*matrix)]
+
+    # Build header line and separator
+    header_line = " | ".join(h.ljust(w) for h, w in zip(headers, col_widths))
+    separator  = "-+-".join("-" * w for w in col_widths)
+
+    # Print
+    print(f"  Data (first {min(len(rows), max_rows)} rows):")
+    print("    " + header_line)
+    print("    " + separator)
+    for row in data_rows:
+        print("    " + " | ".join(cell.ljust(w) for cell, w in zip(row, col_widths)))
+    if len(rows) > max_rows:
+        print(f"    ... ({len(rows)} rows total)\n")
+    else:
+        print()
+
+def inspect_db(db_path):
+    if not os.path.exists(db_path):
+        print(f"❌ Database file not found: {db_path}")
+        return
+
+    conn = sqlite3.connect(db_path)
+    conn.row_factory = sqlite3.Row
+    cur = conn.cursor()
+
+    # 1) Find all user tables
+    cur.execute("""
+        SELECT name 
+          FROM sqlite_master 
+         WHERE type='table' 
+           AND name NOT LIKE 'sqlite_%'
+        ORDER BY name;
+    """)
+    tables = [r[0] for r in cur.fetchall()]
+    print(f"🔎 Tables in {db_path}:")
+    for tbl in tables:
+        print(f"  • {tbl}")
+    print()
+
+    for tbl in tables:
+        print(f"📋 Table: {tbl}")
+        # 2) Schema info
+        cur.execute(f"PRAGMA table_info({tbl});")
+        cols = cur.fetchall()
+        print("  Columns:")
+        for c in cols:
+            # c: cid, name, type, notnull, dflt_value, pk
+            line = f"    • {c['name']} ({c['type']})"
+            if c['notnull']:    line += " NOT NULL"
+            if c['pk']:         line += " PRIMARY KEY"
+            if c['dflt_value'] is not None:
+                line += f" DEFAULT {c['dflt_value']}"
+            print(line)
+
+        # 3) Data dump (pretty‑print first 5 rows)
+        cur.execute(f"SELECT * FROM {tbl};")
+        rows = cur.fetchall()
+        print_table(rows, max_rows=5)
+
+    conn.close()
+
+if __name__ == "__main__":
+    db_file = sys.argv[1] if len(sys.argv) > 1 else 'racquets.db'
+    inspect_db(db_file)
