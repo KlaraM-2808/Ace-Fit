@@ -1,11 +1,11 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 from helpers import build_profile
-from match import match_racquets  # Make sure this is the latest version
+from match import match_racquets
 import os
 
 app = Flask(__name__)
 
-# Reload templates on each request (useful during development)
+# Reload templates on each request (for development)
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.jinja_env.auto_reload = True
 
@@ -16,7 +16,7 @@ def index():
     """
     return render_template('index.html')
 
-@app.route('/form')
+@app.route('/form', methods=['GET'])
 def form():
     """
     Form page: User selects skill/style/strength/etc.
@@ -33,20 +33,20 @@ def form():
     ]
     return render_template('form.html', fields=fields)
 
-@app.route('/recommend', methods=['POST'])
+@app.route('/recommend', methods=['GET', 'POST'])
 def recommend():
     """
     Handle form submission and show racquet matches.
+    Redirects GET requests back to the form.
     """
+    if request.method == 'GET':
+        return redirect(url_for('form'))
+
     profile = build_profile(request.form)
     matches = match_racquets(profile, top_n=6)
-
     no_matches = len(matches) == 0
+
     return render_template('results.html', racquets=matches, profile=profile, no_matches=no_matches)
 
 if __name__ == '__main__':
     app.run(debug=True, port=8000)
-
-
-
-

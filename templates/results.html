@@ -19,7 +19,7 @@
       <h1 class="mb-1">Your Top Racquet Matches</h1>
     </div>
 
-    <!-- Profile Section (centered) -->
+    <!-- Profile Summary -->
     <section class="bg-dark bg-opacity-75 p-4 rounded mb-5 shadow profile-box text-center">
       <h2>Your Profile</h2>
       <ul class="mb-0 list-unstyled">
@@ -47,7 +47,12 @@
           <p><strong>Balance:</strong> {{ r.balance }}</p>
           <p><strong>Playing Style:</strong> {{ r.playing_style }}</p>
           <p><strong>Skill Level:</strong> {{ r.skill_level }}</p>
-          <a href="{{ r['Link'] }}" class="text-info text-decoration-underline" target="_blank">View Racquet</a>
+          <a href="{{ r.link }}" 
+             class="text-info text-decoration-underline" 
+             target="_blank" 
+             rel="noopener noreferrer">
+             View Racquet
+          </a>
         </div>
       </div>
       {% endfor %}
@@ -62,11 +67,3 @@
   </div>
 </body>
 </html>
-
-
-
-
-
-
-
-

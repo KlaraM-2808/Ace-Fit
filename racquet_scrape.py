@@ -48,7 +48,7 @@ def scrape_racquet(url):
     response = requests.get(url)
     if response.status_code != 200:
         print(f"Failed to retrieve {url}. Status code: {response.status_code}")
-        return ["Error fetching page"] * 18
+        return ["Error fetching page"] * 18 + [url]
 
     soup = BeautifulSoup(response.text, 'html.parser')
 
@@ -96,7 +96,7 @@ def scrape_racquet(url):
             if key + ':' in text:
                 spec_data[key] = text.replace(f'{key}:', '').strip()
 
-    # Return all the data as a list
+    # Return all the data as a list, including the link at the end
     return [
         name, price, description,
         spec_data['Head Size'], spec_data['Length'], spec_data['Strung Weight'],
@@ -104,25 +104,27 @@ def scrape_racquet(url):
         spec_data['Beam Width'], spec_data['Composition'], spec_data['Power Level'],
         spec_data['Stroke Style'], spec_data['Swing Speed'], spec_data['Racquet Colors'],
         spec_data['Grip Type'], spec_data['String Pattern'], spec_data['String Tension'],
+        url  # ✅ New column: Link
     ]
 
 # CSV file path
 csv_file = 'racquets.csv'
 
 # Write header only if file doesn't exist yet
-file_exists = os.path.isfile(csv_file) 
- 
-# append data to csv 
+file_exists = os.path.isfile(csv_file)
+
 with open(csv_file, mode='a', newline='') as file:
     writer = csv.writer(file)
 
-    # Write header only once
     if not file_exists:
-        writer.writerow(['Name', 'Price', 'Description', 'Head Size', 'Length', 'Strung Weight', 'Balance', 'Swingweight', 'Stiffness', 'Beam Width', 'Composition', 'Power Level', 'Stroke Style', 'Swing Speed', 'Racquet Colors', 'Grip Type', 'String Pattern', 'String Tension'])
+        writer.writerow([
+            'Name', 'Price', 'Description', 'Head Size', 'Length', 'Strung Weight', 'Balance',
+            'Swingweight', 'Stiffness', 'Beam Width', 'Composition', 'Power Level', 'Stroke Style',
+            'Swing Speed', 'Racquet Colors', 'Grip Type', 'String Pattern', 'String Tension',
+            'Link'  # ✅ Added to header
+        ])
 
-    # Loop through each URL and scrape data
     for url in urls:
         racquet_data = scrape_racquet(url)
         writer.writerow(racquet_data)
-        print(f"Scraped: {racquet_data[0]}")
- 
+        print(f"✅ Scraped: {racquet_data[0]}")

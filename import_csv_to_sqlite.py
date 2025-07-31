@@ -31,7 +31,7 @@ with open(CSV_FILE, newline='', encoding='utf-8') as csvfile:
     col_defs  = ', '.join([f'"{col}" TEXT' for col in columns])
     create_sql = f'CREATE TABLE "{TABLE_NAME}" ({col_defs});'
     cur.execute(create_sql)
-    print(f"Created table '{TABLE_NAME}' with columns: {columns}")
+    print(f"✅ Created table '{TABLE_NAME}' with {len(columns)} columns: {columns}")
 
     # Prepare INSERT statement
     placeholders   = ', '.join(['?' for _ in columns])
@@ -43,11 +43,13 @@ with open(CSV_FILE, newline='', encoding='utf-8') as csvfile:
     for row in reader:
         cur.execute(insert_sql, row)
         count += 1
+        if count <= 3:
+            print(f"⬅️  Sample row: {row}")  # Show first 3 rows
 
 # Commit and close
 conn.commit()
 conn.close()
-print(f"Imported {count} rows into '{TABLE_NAME}' in '{DB_FILE}'.")
+print(f"✅ Imported {count} rows into '{TABLE_NAME}' in '{DB_FILE}'.")
 
 
 
