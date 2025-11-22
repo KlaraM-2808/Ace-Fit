@@ -52,7 +52,7 @@ Top recommendations are shown in the results page.
 
 
 Running the App:
-git clone https://github.com/YOUR_USERNAME/acefit.git
+git clone https://github.com/KlaraM-2808/acefit.git
 cd acefit
 python3 -m venv venv
 source venv/bin/activate
