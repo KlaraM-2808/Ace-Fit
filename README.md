@@ -1,33 +1,38 @@
 AceFit — Tennis Racquet Recommendation System
 
-A data-driven recommendation engine built with Python, Flask, and a structured racquet dataset.
+A full-stack application that delivers personalized racquet recommendations using structured racquet specifications, player profiling, and a modular scoring algorithm.
 
-Overview
+1. Purpose
 
-AceFit is a full-stack web application that recommends tennis racquets based on a player’s physical profile and playing characteristics. It uses real product data scraped from Tennis Warehouse, normalized into a SQLite database, and processed through a custom matching algorithm.
+AceFit was designed to solve a practical problem encountered in real tennis coaching: players often choose racquets without understanding how weight, balance, head size, stiffness, and other technical characteristics affect their performance.
 
-This project originated from a real coaching need: players typically select racquets without understanding which specifications match their game. AceFit provides personalized, structured recommendations using a reproducible logic model.
+This project demonstrates your ability to:
 
-Tech Stack
-Backend
+Identify a real-world problem
 
-Python (Flask) – routing, form processing, recommendation logic
+Analyze its constraints
 
-SQLite – relational database for racquet specifications
+Translate domain expertise into engineering logic
 
-BeautifulSoup – scraping and data extraction
+Build a complete technical solution end-to-end
 
-Custom scoring and filtering algorithm
+AceFit combines scraped product data, a relational database, a scoring engine, and a Flask backend to produce accurate and consistent recommendations.
 
-Frontend
+2. Key Features
 
-HTML, CSS, Bootstrap
+Structured database of real racquet specifications
 
-Jinja templates for server-rendered views
+Scoring algorithm based on player physical profile and play characteristics
 
-Project Structure
+Clean separation between data, logic, and presentation
 
+Modular codebase allowing expansion (new racquets, new scoring layers)
 
+Simple UI for input and interpretation
+
+Lightweight and fast architecture for local or cloud deployment
+
+3. Architecture Overview
 acefit/
 ├── app.py                     # Flask routes and recommendation processing
 │
@@ -36,32 +41,67 @@ acefit/
 │
 ├── templates/
 │   ├── index.html             # Player input form
-│   └── results.html           # Results page with recommended racquets
+│   └── results.html           # Recommendations output page
 │
 ├── static/
 │   ├── styles.css
 │   └── images/
 │
 ├── racquets.db                # Normalized racquet dataset
-└── requirements.txt
+└── requirements.txt           # Project dependencies
 
 
-Recommendation Algorithm
-1. Input Collection
+Backend:
 
-User inputs:
+Flask handles input validation, routing, and output rendering
+
+Algorithm functions are isolated for clarity and testability
+
+Data:
+
+SQLite used for simplicity, reliability, and portability
+
+Scraper generates consistent, structured racquet data
+
+Frontend:
+
+Jinja templates provide lightweight server-rendered pages
+
+4. Data Model
+
+The database contains a single normalized racquet table.
+
+racquets
+
+Column	Type	Description
+id	INTEGER	Primary key
+brand	TEXT	Manufacturer
+model	TEXT	Racquet model
+head_size	INTEGER	Head size (sq in)
+weight	INTEGER	Unstrung or equivalent weight
+balance	TEXT	Balance point (e.g., HL, HH)
+stiffness	INTEGER	RA stiffness rating
+string_pattern	TEXT	Example: 16x19, 18x20
+price	REAL	Retail price
+
+The dataset is generated via scrape.py, which extracts specifications from a trusted source and ensures uniform formatting.
+
+5. Recommendation Algorithm
+Step 1 — Input Processing
+
+The player’s profile is captured through:
 
 Height
 
 Weight
 
-Skill level
+Skill Level
 
-Playing style characteristics (power, control, etc.)
+Play Style preferences (e.g., more power vs more control)
 
-2. Filtering Layer
+Step 2 — Filtering Layer
 
-Initial filtering based on:
+Racquets are filtered using thresholds based on:
 
 Weight range
 
@@ -69,11 +109,11 @@ Head size
 
 Balance category
 
-Stiffness
+Stiffness (comfort vs performance)
 
-3. Scoring Layer
+Step 3 — Scoring Layer
 
-Each racquet is assigned weighted scores according to:
+Each racquet is scored according to:
 
 Maneuverability
 
@@ -83,114 +123,104 @@ Power potential
 
 Control potential
 
-Comfort
+Player compatibility
 
-Compatibility with user’s profile
+Scores are adjustable via a weighting system to support tuning or expansion.
 
-4. Ranking
+Step 4 — Ranking
 
-Racquets are ordered by final composite score and displayed in the results template.
+Racquets are sorted in descending order and displayed in the results view.
 
-Database
-
-The SQLite database contains a normalized dataset of racquet specifications.
-
-Table: racquets
-
-Column	Type	Description
-id	INTEGER	Primary key
-brand	TEXT	Manufacturer
-model	TEXT	Model name
-head_size	INTEGER	Head size (sq in)
-weight	INTEGER	Weight (g)
-balance	TEXT	Balance category
-stiffness	INTEGER	RA stiffness rating
-string_pattern	TEXT	16x19, 18x20, etc.
-price	REAL	Retail price
-
-Population of this table is handled by scrape.py.
-
-Running AceFit Locally
-1. Clone
+6. Installation & Local Setup
+Clone the repository
 git clone https://github.com/YOUR_USERNAME/acefit.git
 cd acefit
 
-2. Create virtual environment
+Set up virtual environment
 python3 -m venv venv
 source venv/bin/activate
 
-3. Install dependencies
+Install dependencies
 pip install -r requirements.txt
 
-4. Run the Flask application
+Run the server
 flask run
 
 
-Application is available at:
+The application runs at:
 http://127.0.0.1:5000/
 
-Features
+7. Engineering Considerations
 
-Player-specific racquet recommendations
+A professional engineering environment would benefit from:
 
-Real racquet specifications and technical attributes
+Separation of concerns:
+Algorithm logic, scraping, and app routing are isolated for clarity and maintainability.
 
-Structured scoring algorithm
+Data normalization:
+Ensures consistent querying, filtering, and scoring.
 
-Clean, lightweight backend
+Deterministic output:
+Given the same inputs and dataset, the algorithm always yields consistent recommendations, which is important for testing and QA.
 
-Simple and direct UI built for rapid inputs and interpretation
+Easy migration:
+Codebase is intentionally structured to be rebuilt as a TypeScript / Node backend in the future.
 
-Modular architecture that supports future expansion
-
-Future Improvements
+8. Future Improvements
 Backend
 
-Rebuild application as a TypeScript Node.js API
+Rebuild backend using TypeScript (Node + Express)
 
-Add unit tests for scoring logic
+Add automated tests for recommendation functions
 
-Introduce a caching layer for faster responses
+Implement caching to reduce repeated scoring operations
 
-Implement authentication for saving profiles
+Introduce a configuration layer for algorithm weight tuning
 
 Frontend
 
-Modernize UI using React or Next.js
+Modern client UI (React, Next.js, or Svelte)
 
-Add multi-step form for improved input clarity
+More granular input steps for better user clarity
 
-Data and Algorithm
+Data
 
-Expand dataset with more racquets and custom tags
+Expand dataset to include additional brands and pro models
 
-Add machine learning model for predictive scoring
+Add metadata (comfort indexes, swingweight, spin potential)
 
-Introduce comfort/injury risk scoring
-
-Build an admin interface for updating the racquet dataset
+Provide administrative tools for updating the racquet database
 
 Deployment
 
 Deploy to Render, Railway, or AWS
 
-Add uptime and performance monitoring
+Add logs, monitoring and metrics
 
-What This Project Demonstrates
+9. What This Project Demonstrates
 
-Ability to build an end-to-end full-stack application
+AceFit highlights capabilities relevant to a professional engineering environment:
 
-Database design and normalization
+Backend development using Flask
 
-Data scraping and preprocessing
+Database design and interaction
 
-Backend architecture and route design
+Data ingestion via scraping and cleaning
 
-Practical algorithm design
+Algorithmic thinking and scoring logic
 
-Clean project structure and maintainable code
+Practical application of domain knowledge
 
-Ability to turn domain expertise (tennis coaching) into functional engineering solutions
+Ability to deliver a functioning, complete system
+
+Clean code organization and maintainable structure
+
+Incremental thinking and clear future expansion pathways
+
+10. Author
+
+Klara Milojkovic Trout
+Software Developer & Tennis Professional
 
 Author
 
