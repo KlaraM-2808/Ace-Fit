@@ -60,19 +60,23 @@ Clean project structure suitable for extension
 
 
 
-Architecture
 acefit/
-│── app.py                 # Flask routes and recommendation processing
+│── app.py              # Flask routes and recommendation processing
+│
 │── scraper/
-│     └── scrape.py        # Scrapes racquet data and populates SQLite DB
+│   └── scrape.py       # Scrapes racquet data and populates SQLite DB
+│
 │── templates/
-│     ├── index.html       # Player input form
-│     └── results.html     # Results page with structured output
+│   ├── index.html      # Player input form
+│   └── results.html    # Results page with structured output
+│
 │── static/
-│     ├── styles.css
-│     └── images/
-│── racquets.db            # Normalized racquet dataset
+│   ├── styles.css
+│   └── images/
+│
+│── racquets.db         # Normalized racquet dataset
 └── requirements.txt
+
 
 
 Recommendation Logic
